@@ -5,9 +5,7 @@ from os import system as sys        #To clear the screen after certain calls
 #Defining Programs
 def play_blackjack():
     #Cache flushed each round:
-    rngroll = []                #saves ~76 characters over defining outright                
-    for number in range(0,52):  #takes 1-52...
-        rngroll.append(number)  #and creates the table out of it
+    rngroll = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,5]
         
     hand = [0]             #your hand; [0] is value and [1:] are the cards
     aceCount = [0]             #number of ace cards
@@ -23,7 +21,7 @@ def play_blackjack():
     def scorecheck():
         if stage[0] > max_stage[0]:
             sys('cls')
-            print("You've completed your last round. Final score: " + str(score[0]) + "Goodbye!")
+            print("You've completed your last round. Final score: " + str(score[0]) + "\nGoodbye!")
             exit()
 
         else:
@@ -31,14 +29,15 @@ def play_blackjack():
             print("\nRound " + str(stage)[1:-1] + " of " + str(max_stage)[1:-1])
             print("Total Score: " + str(score[0]) + "\n")
             print("\nYour Hand (" + str(hand[0]) + "/21): " + ", ".join(hand[1:]))
+            #no need to print visual card if there are no cards in your deck;
             if hand[0] > 1:
                 print("Last Card Drawn:")
-                for y in cache:
-                    print("".join(y))
+                for line in cache:
+                    print("".join(line))
     
         #if game continues, check value of hand
         if int(hand[0]) == 21: 
-            print("You Win!s")
+            print("You Win!")
             input("Press Enter to go to the next round... ")
             eor_scoring()
         
@@ -55,7 +54,7 @@ def play_blackjack():
                 
                 #devalues a single ace by 10, removes it from the deck, then continues
                 hand[0] -= 10
-                aceCount[0] -= 1
+                aceCount[0] -= 10
                 scorecheck()
     
         #if hand not equal to or greater than 21, ask to draw a card
@@ -64,7 +63,8 @@ def play_blackjack():
                 try:
                     card = int(input("Draw Card? 1 for yes or 2 to end the round "))
                 except ValueError:
-                    drawcard()
+                    sys('cls')
+                    print("Bad Value. Try Again.")
                 if card == int(1):
                     drawcard()
                 elif card == int(2):
@@ -105,20 +105,28 @@ def play_blackjack():
         print(hand)
         for x in deck:
             if x[1] in hand[-1:]:
+                #10 is the only number with 2 digits; ths lines 1 and 4 are always the same
                 if '10 of ' in x[1]:
                     cache[1] = "|10    |"
                     cache[4] = "|    10|"
 
                 else:
+                    #else, print the correct lines 1 and 4 given the card
                     cache[1] = str("|" + x[3] + "     |")
                     cache[4] = str("|     " + x[3] + "|")
-            
+
+                #suit lines 2 and 3 are independent of the 10 check, and are thus outside. also always the same
                 cache[2] = str("|" + x[4] + "     |")
                 cache[3] = str("|     " + x[4] + "|")    
 
         for y in cache:
             print("".join(y))
     
+    def chance_for_21():
+        value_rem_until_21 = 21 - hand[0]
+        for value in deck[2]:
+            if value == value_rem_until_21: 
+                chance_of_21 += (1 / 2) #2 is placeholder; this definition is not used anywhere yet so it has no effect
     scorecheck()
 
 def NumberOfRounds():
