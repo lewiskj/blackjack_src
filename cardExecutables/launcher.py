@@ -1,16 +1,18 @@
 ##I NEED TO:
-##more CLS functions in divisible
 ##Exit when only one card is in the deck sooner, rather than pressing enter 1 more time
-##Ace should be 1 in divisible; not 11
 
-from os import system as sys        #RNG Function
+##Also written in Windows, so 'cls' wouldn't work in Linux etc.
+##To solve that I could put an OS check at the start; farily simple
+
+
+from os import system as sys        #to call 'cls'; clearing the screen
 from random import choice as rand   #To clear the screen after certain calls
 
 def BadValue():
     sys('cls')
     print("Bad Value. Try Again.")
-    #selectionScreen for launcher
-    # apparently all other instances work without passing a function afterwards...?
+    #selectionScreen for launcher; called from below & not here
+    #all other instances work without passing a function afterwards...?
 
 def launcher():
     print('Card Games - Written in Python\n')
@@ -48,34 +50,23 @@ def blackjack_py():
         for number in range(0,52):  #takes 1-52...
             rngroll.append(number)  #and creates the table out of it
             
-        aceCount = [0]             #number of ace cards
-        hand = [0]             #your hand; [0] is value and [1:] are the cards
+        aceCount = [0]              #number of ace cards
+        hand = [0]                  #your hand; [0] is value and [1:] are the cards
         
-        cache = [
-            ["|¯¯¯¯¯¯˥"],   #0
+        cache = [           #Draws on screen w/ Unicode
+            ["|¯¯¯¯¯¯˥"],   #0 STATIC
             [],             #1 Identifier
             [],             #2 Suit
             [],             #3 Suit
             [],             #4 Identifier
-            ["|______˩"],   #5
+            ["|______˩"],   #5 STATIC
         ]                   #Could be global? But prefer to keep each game seperate
         
         def scorecheck():
             if stage[0] > max_stage[0]:
                 sys('cls')
-                print("You've completed your last round. Final score: " + str(score[0]))
-                while True:
-                    try:
-                        playAgain = int(input("Do you want to play again? [no] or 1 for yes:\n"))
-                    
-                    except ValueError:
-                        launcher()
-
-                    if playAgain == 1:
-                        NumberOfRounds()
-                    
-                    else:
-                        launcher()
+                print("You've completed your last round. Final score: " + str(score[0]) + "\n" + "~"*25)
+                launcher()
                 
             else:
                 sys('cls')
@@ -87,30 +78,24 @@ def blackjack_py():
                     for y in cache:
                         print("".join(y))
         
-            #if game continues, check value of hand
-            if int(hand[0]) == 21: 
+            if int(hand[0]) == 21:   #if game continues, check value of hand
                 print("You Win!")
                 input("Press Enter to go to the next round... ")
                 eor_scoring()
             
             elif hand[0] > 21:
-                #Ace check; if you don't have one the game is over
-                if aceCount[0] == 0:
+                if aceCount[0] == 0:    #Ace check; if you don't have one the game is over
                     print("You got over 21!")
                     input("Press Enter to go to the next round...")
                     eor_scoring()
 
-                #Ace check; if you have an ace your hand value drops by 10 and the game resumes
-                elif aceCount[0] > 0:
+                elif aceCount[0] > 0:   #devalues a single ace by 10, removes it from the deck, then continues
                     print("You got over 21, but you drew one or more Aces. One of them has been devalued to let you keep drawing")
-                    
-                    #devalues a single ace by 10, removes it from the deck, then continues
                     hand[0] -= 10
                     aceCount[0] -= 1
                     scorecheck()
         
-            #if hand not equal to or greater than 21, ask to draw a card
-            else:
+            else:    #if hand not equal to or greater than 21, ask to draw
                 card = [0]
                 while True:
                     try:
@@ -125,20 +110,12 @@ def blackjack_py():
                         BadValue()
         
         def drawcard():
-            #chooses a random number 1-52; based off of the rngroll table
-            x = rand(rngroll)     
-            
-            #removes possibility that same card can be referenced twice in one round
-            rngroll.remove(x)
+            x = rand(rngroll)               #chooses a random number 1-52; based off of the rngroll table
+            rngroll.remove(x)               #removes possibility that same card can be referenced twice
+            hand.append(deck[x-1][1])       #adds the name of the card to the player's hand
+            hand[0] += int(deck[x-1][2])    #Adds numerical value to the player's hand[0]
 
-            #adds the name of the card to the player's hand
-            hand.append(deck[x-1][1])
-            
-            #Adds numerical value to the player's hand[0]
-            hand[0] += int(deck[x-1][2])
-
-            #If you go over 21, checks to see if you have an ace
-            if 'Ace' in deck[x-1][1]:
+            if 'Ace' in deck[x-1][1]:       #Then, if you're over 21, checks for an ace in your hand
                 aceCount[0] += 1
             
             visual_cards()
@@ -158,25 +135,22 @@ def blackjack_py():
         def visual_cards():
             print(hand)
             for x in deck:
-                if x[1] in hand[-1:]:
+                if x[1] in hand[-1:]:               #10 is two characters instead of the usual 1; catch that
                     if '10 of ' in x[1]:
                         cache[1] = "|10    |"
                         cache[4] = "|    10|"
 
                     else:
-                        cache[1] = str("|" + x[3] + "     |")
+                        cache[1] = str("|" + x[3] + "     |")   #Normal top and bottom lines
                         cache[4] = str("|     " + x[3] + "|")
                 
                     cache[2] = str("|" + x[4] + "     |")
-                    cache[3] = str("|     " + x[4] + "|")    
+                    cache[3] = str("|     " + x[4] + "|")       #Normal middle lines
 
             for y in cache:
                 print("".join(y))
     
         scorecheck()
-
-
-    #Static Variables; are not flushed after each round
 
     def NumberOfRounds():
         sys('cls')
@@ -191,81 +165,89 @@ def blackjack_py():
             else:
                 play_blackjack()
 
-    
+                        #Less-dynamic variables:
     stage = [1]         #Round number
     max_stage = [0]     #Maximum number of rounds
     score = [0]         #Total score
 
-    #Start game
-    NumberOfRounds()
+    NumberOfRounds()     #And begin!
 
 def divisible():
-    #Importing Needed Modules
 
-    def play_divisible():   
+    def play_divisible():
         
-        ##flushed each round##
         hand = [0]          #your hand; index 0 not used but easier to leave be; 1: are the textual names
         value = [0]
-        ## ##
-
-        remainderZero = [0]   #not flushed
+        remainderZero = [0]   #Times your 3rd draw divided evenly with your first 2; not flushed
+        stage = [0]
 
         rngroll = []                #when this is emptied, game over                               
         for number in range(0,52):  #takes 1-52...
-            rngroll.append(number)  #and creates the table out of it
+            rngroll.append(number)  #and creates the table out of it; same as blackjack
             
-        cache = [
-            ["|¯¯¯¯¯¯˥"],   #0
+        cache = [           #Draws on screen w/ Unicode
+            ["|¯¯¯¯¯¯˥"],   #0 STATIC
             [],             #1 Identifier
             [],             #2 Suit
             [],             #3 Suit
             [],             #4 Identifier
-            ["|______˩"],   #5
-            #Used to 'visually' (Unicode chars.) draw a card on screen
+            ["|______˩"],   #5 STATIC
         ]
             
         def scorecheck():
-            while True:     #a few lines to prompt user before drawing a card
+            while stage[0] < 17:     #a few lines to prompt user before drawing a card
                 try:
                     input("\nPress any key to draw three cards:\n" + "~"*25) #~*25 for clarity inbetween draws
                 except ValueError:
+                    stage[0] += 1
+                    sys('cls')
                     drawcard()
                 else:
+                    stage[0] += 1
+                    sys('cls')
                     drawcard()
+            
+            if stage[0] == 17:
+                drawcard()  #... which trips an index error and ends the game normally
 
         def drawcard():
-            #sys('cls')
-
-            for itterate in range(1,4): #draws 3 cards
+            for itterate in range(1,4): #draws 3 cards; itterate an ease of access placeholder
                 try:
-                    x = rand(rngroll)   #prevents double rolling    
-                    rngroll.remove(x)   #prevents double rolling
-                    
+                    x = rand(rngroll)      
+                    rngroll.remove(x)           #prevents double rolling
                     hand.append(deck[x-1][1])   #Appends the textual name of the card
-                    value[0] += deck[x-1][2]    #Appends the numerical value of the card
+                    value[0] += deck[x-1][2]           
                     visual_cards()              #Draws card on screen
                 
                 except IndexError:              #Can't draw 3 cards? Game over.
                     print("You're all out of cards! The card you didn't draw was the " + str(hand[1]))
                     print("Final net score: " + str(remainderZero[0]) + "\n")
+                    input("Press any key to return to the launcher...")
                     launcher()
-
-            additives = 0
-            for x in deck:
+            
+            additives = 0       #reset this variable due to bugs
+            for x in deck:      #catches aces and uses 1 instead of 11 where applicable
                 if str(hand[1]) in x:
-                    additives += x[2]
+                    if x[3] == 'A':
+                        additives += 1
+                    else:
+                        additives += x[2]
                 
                 elif str(hand[2]) in x:
-                    additives += x[2]
+                    if x[3] == 'A':
+                        additives += 1
+                    else:
+                        additives += x[2]
 
                 elif str(hand[3]) in x:
-                    divisor = x[2]            
+                    if x[3] == 'A':
+                        divisor = 1
+                    else:
+                        divisor = x[2]            
 
-            print("\nLast Cards Drawn: " + ", ".join(hand[1:]))
-
-            print("Additives: " + str(additives))
-            print("Divisor: " + str(divisor))
+            print("\nLast Cards Drawn: " + ", ".join(hand[1:])) #Prints info about last draw
+            print("Additives: " + str(additives))               ##
+            print("Divisor: " + str(divisor))                   ##
             
             if int(additives)%int(divisor) == 0:    #Is the remainder 0?
                 remainderZero[0] += 1               #Yes; +=1
@@ -275,10 +257,10 @@ def divisible():
                 remainderZero[0] -= 1               #No; -=1
                 print("Your cards did not divide evenly. Score -1; " + str(remainderZero[0]))
 
-            del hand[1:]         
-            divisor = 0
+            del hand[1:]    #This solved an issue where the values would carry over...
+            divisor = 0     #...from the previous draw
 
-            scorecheck()
+            scorecheck()    #And return for another draw
 
         def visual_cards():
             for y in deck:                          #10 is two characters instead of the usual 1; catch that
@@ -297,12 +279,13 @@ def divisible():
             for z in cache:
                 print("".join(z))
 
-        #start game
-        scorecheck()
+        sys('cls')      #first run messages
+        print("Welcome to Divisible!\n")
+        scorecheck()    #Starts the real game
 
     play_divisible()
 
-deck = [
+deck = [    #Deck: much easier to reference this as a global variable;
         #0      1                       2   3           4
         #Pos    Name                    Val Identifier  Suit
         [1,     "Ace of Clubs",         11, 'A',        "♣"],
@@ -358,6 +341,5 @@ deck = [
         [51,    "King of Diamonds",     10, 'K',        "♦"],
         [52,    "King of Hearts",       10, 'K',        "♥"]
         ]
-#############################
 
 launcher()
