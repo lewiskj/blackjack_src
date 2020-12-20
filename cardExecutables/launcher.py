@@ -1,12 +1,69 @@
 ##I NEED TO:
-##Exit when only one card is in the deck sooner, rather than pressing enter 1 more time
+##
 
 ##Also written in Windows, so 'cls' wouldn't work in Linux etc.
 ##To solve that I could put an OS check at the start; farily simple
 
-
+####Global vars, functions etc...####
 from os import system as sys        #to call 'cls'; clearing the screen
 from random import choice as rand   #To clear the screen after certain calls
+
+deck = [    
+        #0      1                       2   3           4
+        #Pos    Name                    Val Identifier  Suit
+        [1,     "Ace of Clubs",         11, 'A',        "♣"],
+        [2,     "Ace of Spades",        11, 'A',        "♠"],
+        [3,     "Ace of Diamonds",      11, 'A',        "♦"],
+        [4,     "Ace of Hearts",        11, 'A',        "♥"],
+        [5,     "2 of Clubs",           2,  '2',        "♣"],
+        [6,     "2 of Spades",          2,  '2',        "♠"],
+        [7,     "2 of Diamonds",        2,  '2',        "♦"],
+        [8,     "2 of Hearts",          2,  '2',        "♥"],
+        [9,     "3 of Clubs",           3,  '3',        "♣"],
+        [10,    "3 of Spades",          3,  '3',        "♠"],
+        [11,    "3 of Diamonds",        3,  '3',        "♦"],
+        [12,    "3 of Hearts",          3,  '3',        "♥"],
+        [13,    "4 of Clubs",           4,  '4',        "♣"],
+        [14,    "4 of Spades",          4,  '4',        "♠"],
+        [15,    "4 of Diamonds",        4,  '4',        "♦"],
+        [16,    "4 of Hearts",          4,  '4',        "♥"],
+        [17,    "5 of Clubs",           5,  '5',        "♣"],
+        [18,    "5 of Spades",          5,  '5',        "♠"],
+        [19,    "5 of Diamonds",        5,  '5',        "♦"],
+        [20,    "5 of Hearts",          5,  '5',        "♥"],
+        [21,    "6 of Clubs",           6,  '6',        "♣"],
+        [22,    "6 of Spades",          6,  '6',        "♠"],
+        [23,    "6 of Diamonds",        6,  '6',        "♦"],
+        [24,    "6 of Hearts",          6,  '6',        "♥"],
+        [25,    "7 of Clubs",           7,  '7',        "♣"],
+        [26,    "7 of Spades",          7,  '7',        "♠"],
+        [27,    "7 of Diamonds",        7,  '7',        "♦"],
+        [28,    "7 of Hearts",          7,  '7',        "♥"],
+        [29,    "8 of Clubs",           8,  '8',        "♣"],
+        [30,    "8 of Spades",          8,  '8',        "♠"],
+        [31,    "8 of Diamonds",        8,  '8',        "♦"],
+        [32,    "8 of Hearts",          8,  '8',        "♥"],
+        [33,    "9 of Clubs",           9,  '9',        "♣"],
+        [34,    "9 of Spades",          9,  '9',        "♠"],
+        [35,    "9 of Diamonds",        9,  '9',        "♦"],
+        [36,    "9 of Hearts",          9,  '9',        "♥"],
+        [37,    "10 of Clubs",          10, '10',       "♣"],
+        [38,    "10 of Spades",         10, '10',       "♠"],
+        [39,    "10 of Diamonds",       10, '10',       "♦"],
+        [40,    "10 of Hearts",         10, '10',       "♥"],
+        [41,    "Jack of Clubs",        10, 'J',        "♣"],
+        [42,    "Jack of Spades",       10, 'J',        "♠"],
+        [43,    "Jack of Diamonds",     10, 'J',        "♦"],
+        [44,    "Jack of Hearts",       10, 'J',        "♥"],
+        [45,    "Queen of Clubs",       10, 'Q',        "♣"],
+        [46,    "Queen of Spades",      10, 'Q',        "♠"],
+        [47,    "Queen of Diamonds",    10, 'Q',        "♦"],
+        [48,    "Queen of Hearts",      10, 'Q',        "♥"],
+        [49,    "King of Clubs",        10, 'K',        "♣"],
+        [50,    "King of Spades",       10, 'K',        "♠"],
+        [51,    "King of Diamonds",     10, 'K',        "♦"],
+        [52,    "King of Hearts",       10, 'K',        "♥"]
+        ]
 
 def BadValue():
     sys('cls')
@@ -14,33 +71,29 @@ def BadValue():
     #selectionScreen for launcher; called from below & not here
     #all other instances work without passing a function afterwards...?
 
+####Start of program functions####
 def launcher():
-    print('Card Games - Written in Python\n')
+    while True:
+        try:
+            select = int(input("Select a game: "))
+        
+        except ValueError:
+            BadValue()
+            launcher()
+        
+        except UnboundLocalError:
+            BadValue()
+            launcher()
 
-    def selectionScreen():
-        while True:
-            try:
-                select = int(input("Select a game: "))
-            
-            except ValueError:
-                BadValue()
-                selectionScreen()
-            
-            except UnboundLocalError:
-                BadValue()
-                selectionScreen()
+        if select == 1:
+            blackjack_py()
+        
+        elif select == 2:
+            divisible()
 
-            if select == 1:
-                blackjack_py()
-            
-            elif select == 2:
-                divisible()
-
-            else:
-                BadValue()
-                selectionScreen()
-
-    selectionScreen()
+        else:
+            BadValue()
+            launcher()
 
 def blackjack_py():
     #Defining Programs
@@ -166,11 +219,12 @@ def blackjack_py():
                 play_blackjack()
 
                         #Less-dynamic variables:
+    
     stage = [1]         #Round number
     max_stage = [0]     #Maximum number of rounds
     score = [0]         #Total score
 
-    NumberOfRounds()     #And begin!
+    NumberOfRounds()     #program start
 
 def divisible():
 
@@ -178,7 +232,7 @@ def divisible():
         
         hand = [0]          #your hand; index 0 not used but easier to leave be; 1: are the textual names
         value = [0]
-        remainderZero = [0]   #Times your 3rd draw divided evenly with your first 2; not flushed
+        score = [0]   #Times your 3rd draw divided evenly with your first 2; not flushed
         stage = [0]
 
         rngroll = []                #when this is emptied, game over                               
@@ -209,6 +263,7 @@ def divisible():
             
             if stage[0] == 17:
                 drawcard()  #... which trips an index error and ends the game normally
+                            #done like this to avoid pressing enter
 
         def drawcard():
             for itterate in range(1,4): #draws 3 cards; itterate an ease of access placeholder
@@ -221,10 +276,11 @@ def divisible():
                 
                 except IndexError:              #Can't draw 3 cards? Game over.
                     print("You're all out of cards! The card you didn't draw was the " + str(hand[1]))
-                    print("Final net score: " + str(remainderZero[0]) + "\n")
+                    print("Final net score: " + str(score[0]) + "\n")
                     input("Press any key to return to the launcher...")
                     launcher()
             
+            ####Calculates additives + divisor####
             additives = 0       #reset this variable due to bugs
             for x in deck:      #catches aces and uses 1 instead of 11 where applicable
                 if str(hand[1]) in x:
@@ -233,7 +289,7 @@ def divisible():
                     else:
                         additives += x[2]
                 
-                elif str(hand[2]) in x:
+                elif str(hand[2]) in x:     #won't let me combine hand[1] and [2] into 1 statement YEP
                     if x[3] == 'A':
                         additives += 1
                     else:
@@ -248,15 +304,23 @@ def divisible():
             print("\nLast Cards Drawn: " + ", ".join(hand[1:])) #Prints info about last draw
             print("Additives: " + str(additives))               ##
             print("Divisor: " + str(divisor))                   ##
-            
+            ####Calculates additives + divisor####
+
+            ####Calculates if remainder is 0 (score[0]) or a bonus condition is met####
             if int(additives)%int(divisor) == 0:    #Is the remainder 0?
-                remainderZero[0] += 1               #Yes; +=1
-                print("Your cards divide evenly! Score +1; " + str(remainderZero[0]))
+                score[0] += 2               #Yes; +=1
+                print("Your cards divide evenly! Score +2; " + str(score[0]))
+            
+            elif int(additives) < int(divisor):
+                score[0] += 1
+                print("Your divisor was greater than your additives. Score +1; " + str(score[0]))
+
             
             else:
-                remainderZero[0] -= 1               #No; -=1
-                print("Your cards did not divide evenly. Score -1; " + str(remainderZero[0]))
-
+                score[0] -= 1               #No; -=1
+                print("Your cards did not divide evenly, and no bonus conditions were met. Score -1; " + str(score[0]))        
+        ####Calculates if remainder is 0 (score[0]) or a bonus condition is met####
+            
             del hand[1:]    #This solved an issue where the values would carry over...
             divisor = 0     #...from the previous draw
 
@@ -283,63 +347,13 @@ def divisible():
         print("Welcome to Divisible!\n")
         scorecheck()    #Starts the real game
 
-    play_divisible()
+    play_divisible()    #program start
 
-deck = [    #Deck: much easier to reference this as a global variable;
-        #0      1                       2   3           4
-        #Pos    Name                    Val Identifier  Suit
-        [1,     "Ace of Clubs",         11, 'A',        "♣"],
-        [2,     "Ace of Spades",        11, 'A',        "♠"],
-        [3,     "Ace of Diamonds",      11, 'A',        "♦"],
-        [4,     "Ace of Hearts",        11, 'A',        "♥"],
-        [5,     "2 of Clubs",           2,  '2',        "♣"],
-        [6,     "2 of Spades",          2,  '2',        "♠"],
-        [7,     "2 of Diamonds",        2,  '2',        "♦"],
-        [8,     "2 of Hearts",          2,  '2',        "♥"],
-        [9,     "3 of Clubs",           3,  '3',        "♣"],
-        [10,    "3 of Spades",          3,  '3',        "♠"],
-        [11,    "3 of Diamonds",        3,  '3',        "♦"],
-        [12,    "3 of Hearts",          3,  '3',        "♥"],
-        [13,    "4 of Clubs",           4,  '4',        "♣"],
-        [14,    "4 of Spades",          4,  '4',        "♠"],
-        [15,    "4 of Diamonds",        4,  '4',        "♦"],
-        [16,    "4 of Hearts",          4,  '4',        "♥"],
-        [17,    "5 of Clubs",           5,  '5',        "♣"],
-        [18,    "5 of Spades",          5,  '5',        "♠"],
-        [19,    "5 of Diamonds",        5,  '5',        "♦"],
-        [20,    "5 of Hearts",          5,  '5',        "♥"],
-        [21,    "6 of Clubs",           6,  '6',        "♣"],
-        [22,    "6 of Spades",          6,  '6',        "♠"],
-        [23,    "6 of Diamonds",        6,  '6',        "♦"],
-        [24,    "6 of Hearts",          6,  '6',        "♥"],
-        [25,    "7 of Clubs",           7,  '7',        "♣"],
-        [26,    "7 of Spades",          7,  '7',        "♠"],
-        [27,    "7 of Diamonds",        7,  '7',        "♦"],
-        [28,    "7 of Hearts",          7,  '7',        "♥"],
-        [29,    "8 of Clubs",           8,  '8',        "♣"],
-        [30,    "8 of Spades",          8,  '8',        "♠"],
-        [31,    "8 of Diamonds",        8,  '8',        "♦"],
-        [32,    "8 of Hearts",          8,  '8',        "♥"],
-        [33,    "9 of Clubs",           9,  '9',        "♣"],
-        [34,    "9 of Spades",          9,  '9',        "♠"],
-        [35,    "9 of Diamonds",        9,  '9',        "♦"],
-        [36,    "9 of Hearts",          9,  '9',        "♥"],
-        [37,    "10 of Clubs",          10, '10',       "♣"],
-        [38,    "10 of Spades",         10, '10',       "♠"],
-        [39,    "10 of Diamonds",       10, '10',       "♦"],
-        [40,    "10 of Hearts",         10, '10',       "♥"],
-        [41,    "Jack of Clubs",        10, 'J',        "♣"],
-        [42,    "Jack of Spades",       10, 'J',        "♠"],
-        [43,    "Jack of Diamonds",     10, 'J',        "♦"],
-        [44,    "Jack of Hearts",       10, 'J',        "♥"],
-        [45,    "Queen of Clubs",       10, 'Q',        "♣"],
-        [46,    "Queen of Spades",      10, 'Q',        "♠"],
-        [47,    "Queen of Diamonds",    10, 'Q',        "♦"],
-        [48,    "Queen of Hearts",      10, 'Q',        "♥"],
-        [49,    "King of Clubs",        10, 'K',        "♣"],
-        [50,    "King of Spades",       10, 'K',        "♠"],
-        [51,    "King of Diamonds",     10, 'K',        "♦"],
-        [52,    "King of Hearts",       10, 'K',        "♥"]
-        ]
+def battleship():
+    print("Just an idea? WIP?")
+    exit()
+    ##placeholder
 
-launcher()
+
+print('Card Games - Written in Python\n')   #Show this message once
+launcher()                                  #program start
