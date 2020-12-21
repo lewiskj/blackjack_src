@@ -69,7 +69,7 @@ def BadValue():
     sys('cls')
     print("Bad Value. Try Again.")
     #selectionScreen for launcher; called from below & not here
-    #all other instances work without passing a function afterwards...?
+    #all other instances work without passing a function afterwards...? 
 
 ####Start of program functions####
 def launcher():
@@ -348,12 +348,6 @@ def divisible():
         scorecheck()    #Starts the real game
 
     play_divisible()    #program start
-
-def battleship():
-    print("Just an idea? WIP?")
-    exit()
-    ##placeholder
-
 
 print('Card Games - Written in Python\n')   #Show this message once
 launcher()                                  #program start
